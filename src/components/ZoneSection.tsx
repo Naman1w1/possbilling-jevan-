@@ -45,9 +45,9 @@ export const ZoneSection: React.FC<ZoneSectionProps> = ({
         <div className="flex-1 h-px bg-gradient-to-r from-maroon-900/40 via-stone-300 to-transparent ml-1" />
       </div>
 
-      {/* Tables Grid */}
+      {/* Tables Grid - Fixed to 8 columns maximum on desktop/laptops so cards remain perfect squares */}
       {!collapsed && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 xl:grid-cols-10 gap-2.5 sm:gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-8 2xl:grid-cols-8 gap-2.5 sm:gap-3">
           {tables.map((table) => (
             <TableCard
               key={table.id}

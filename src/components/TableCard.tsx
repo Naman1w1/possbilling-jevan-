@@ -78,7 +78,7 @@ export const TableCard: React.FC<TableCardProps> = ({
       tabIndex={0}
       role="button"
       aria-label={`Table ${table.id}, Status: ${table.status}, Amount: ₹${table.amount}`}
-      className={`group relative flex flex-col justify-between rounded-xl sm:rounded-2xl p-2 sm:p-2.5 min-h-[96px] sm:min-h-[104px] transition-all duration-200 cursor-pointer select-none border outline-none focus:ring-2 focus:ring-maroon-800/30 ${
+      className={`group relative flex flex-col justify-between aspect-square w-full rounded-xl sm:rounded-2xl p-2 sm:p-2.5 transition-all duration-200 cursor-pointer select-none border outline-none focus:ring-2 focus:ring-maroon-800/30 ${
         style.cardBg
       } ${
         isMatchedSearch
