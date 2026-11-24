@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary-maroon: #731b21;
+    --primary-maroon-dark: #521317;
+    --gold-accent: #c59b27;
+    --bg-cream: #f7f4ed;
+  }
+
+  body {
+    background-color: #f7f4ed;
+    color: #2d1810;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+/* Custom premium scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #ede8dd;
+}
+::-webkit-scrollbar-thumb {
+  background: #c5baa6;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #731b21;
+}
+
+/* Premium Button Styling */
+.btn-premium-maroon {
+  background: linear-gradient(135deg, #7e1e24 0%, #63161b 100%);
+  color: #fdfaf6;
+  border: 1px solid rgba(223, 183, 67, 0.28);
+  box-shadow: 0 2px 8px -1px rgba(99, 22, 27, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-premium-maroon:hover {
+  background: linear-gradient(135deg, #8f232a 0%, #70191f 100%);
+  box-shadow: 0 4px 14px -1px rgba(99, 22, 27, 0.45), 0 0 12px rgba(223, 183, 67, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-premium-maroon:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(99, 22, 27, 0.4);
+}
+
+/* Secondary Button */
+.btn-premium-secondary {
+  background: #ffffff;
+  color: #731b21;
+  border: 1px solid #dfd7c7;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.btn-premium-secondary:hover {
+  background: #fdfaf6;
+  border-color: #731b21;
+  box-shadow: 0 3px 10px rgba(115, 27, 33, 0.08);
+  transform: translateY(-1px);
+}
+
+/* Subtle Shimmer for Highlighting */
+@keyframes gold-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer-gold {
+  background: linear-gradient(90deg, transparent 0%, rgba(223, 183, 67, 0.15) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: gold-shimmer 4s infinite;
+}
+
+/* Table Card Base */
+.table-card-base {
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.table-card-base:hover {
+  transform: translateY(-2px);
+}
+
