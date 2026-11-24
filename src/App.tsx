@@ -253,6 +253,7 @@ export const App: React.FC = () => {
       }
     } else if (feature === 'operations') {
       setBillingTable(null);
+      setOperationsInitialSection(null);
       setCurrentView('operations');
     } else if (feature === 'kitchen-display') {
       setBillingTable(null);
@@ -297,6 +298,11 @@ export const App: React.FC = () => {
         onOpenRecent={() => {
           setIsRecentDrawerOpen(true);
         }}
+        onOpenOperations={() => {
+          setBillingTable(null);
+          setOperationsInitialSection(null);
+          setCurrentView('operations');
+        }}
         onOpenItemOnOff={() => {
           setBillingTable(null);
           setCurrentView('item-on-off');
@@ -336,6 +342,7 @@ export const App: React.FC = () => {
           }}
           onNavigateToTables={() => {
             setBillingTable(null);
+            setOperationsInitialSection(null);
             setCurrentView('tables');
           }}
           onOpenReservation={() => setIsReservationOpen(true)}
@@ -355,6 +362,7 @@ export const App: React.FC = () => {
           onOpenSettings={() => setIsSettingsOpen(true)}
           onPrintBill={(tbl) => setTableForPrint(tbl)}
           initialOpenSection={operationsInitialSection}
+          onClearInitialSection={() => setOperationsInitialSection(null)}
           reservations={reservations}
           onUpdateReservations={(newRes) => setReservations(newRes)}
           onSeatCustomer={(tableId, guestName, partySize) => {

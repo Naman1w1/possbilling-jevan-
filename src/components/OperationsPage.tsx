@@ -36,7 +36,8 @@ import {
   Tag,
   Wallet,
   ChefHat,
-  SlidersHorizontal
+  SlidersHorizontal,
+  ArrowLeft
 } from 'lucide-react';
 import { Table, Reservation, TaxRule, DiscountRule } from '../types/pos';
 import { MENU_CATALOG, MOCK_RESERVATIONS, MOCK_TAX_RULES, MOCK_DISCOUNT_RULES } from '../data/mockData';
@@ -63,6 +64,7 @@ interface OperationsPageProps {
   onPrintBill?: (table: Table) => void;
   onUpdateTables?: (tables: Table[]) => void;
   initialOpenSection?: 'tables' | 'menu' | 'reservation' | 'taxes' | 'discounts' | null;
+  onClearInitialSection?: () => void;
   reservations?: Reservation[];
   onUpdateReservations?: (res: Reservation[]) => void;
   onSeatCustomer?: (tableId: string, guestName: string, partySize: number) => void;
@@ -85,6 +87,7 @@ export const OperationsPage: React.FC<OperationsPageProps> = ({
   onPrintBill,
   onUpdateTables,
   initialOpenSection,
+  onClearInitialSection,
   reservations = MOCK_RESERVATIONS,
   onUpdateReservations,
   onSeatCustomer,
@@ -97,22 +100,55 @@ export const OperationsPage: React.FC<OperationsPageProps> = ({
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [isDayEndOpen, setIsDayEndOpen] = useState<boolean>(false);
   const [isDuePaymentPageOpen, setIsDuePaymentPageOpen] = useState<boolean>(false);
-  const [isTableManagementOpen, setIsTableManagementOpen] = useState<boolean>(initialOpenSection === 'tables');
+  const [isTableManagementOpen, setIsTableManagementOpen] = useState<boolean>(false);
   const [isBillKotPrintOpen, setIsBillKotPrintOpen] = useState<boolean>(false);
   const [isItemOnOffOpen, setIsItemOnOffOpen] = useState<boolean>(false);
-  const [isMenuManagementOpen, setIsMenuManagementOpen] = useState<boolean>(initialOpenSection === 'menu');
-  const [isTaxesOpen, setIsTaxesOpen] = useState<boolean>(initialOpenSection === 'taxes');
-  const [isDiscountsOpen, setIsDiscountsOpen] = useState<boolean>(initialOpenSection === 'discounts');
-  const [isReservationPageOpen, setIsReservationPageOpen] = useState<boolean>(initialOpenSection === 'reservation');
+  const [isMenuManagementOpen, setIsMenuManagementOpen] = useState<boolean>(false);
+  const [isTaxesOpen, setIsTaxesOpen] = useState<boolean>(false);
+  const [isDiscountsOpen, setIsDiscountsOpen] = useState<boolean>(false);
+  const [isReservationPageOpen, setIsReservationPageOpen] = useState<boolean>(false);
   const [syncProgress, setSyncProgress] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  const handleBackToAllOperations = () => {
+    setIsTableManagementOpen(false);
+    setIsMenuManagementOpen(false);
+    setIsTaxesOpen(false);
+    setIsDiscountsOpen(false);
+    setIsReservationPageOpen(false);
+    setIsBillKotPrintOpen(false);
+    setIsItemOnOffOpen(false);
+    setIsDuePaymentPageOpen(false);
+    setIsDayEndOpen(false);
+    if (onClearInitialSection) {
+      onClearInitialSection();
+    }
+  };
+
   React.useEffect(() => {
-    if (initialOpenSection === 'tables') setIsTableManagementOpen(true);
-    if (initialOpenSection === 'menu') setIsMenuManagementOpen(true);
-    if (initialOpenSection === 'taxes') setIsTaxesOpen(true);
-    if (initialOpenSection === 'discounts') setIsDiscountsOpen(true);
-    if (initialOpenSection === 'reservation') setIsReservationPageOpen(true);
+    if (initialOpenSection) {
+      if (initialOpenSection === 'tables') setIsTableManagementOpen(true);
+      else if (initialOpenSection === 'menu') setIsMenuManagementOpen(true);
+      else if (initialOpenSection === 'taxes') setIsTaxesOpen(true);
+      else if (initialOpenSection === 'discounts') setIsDiscountsOpen(true);
+      else if (initialOpenSection === 'reservation') setIsReservationPageOpen(true);
+
+      // Clear in parent so subsequent opens from menu default to All Operations
+      if (onClearInitialSection) {
+        onClearInitialSection();
+      }
+    } else {
+      // If initialOpenSection is null/undefined, ensure all sub-pages are closed
+      setIsTableManagementOpen(false);
+      setIsMenuManagementOpen(false);
+      setIsTaxesOpen(false);
+      setIsDiscountsOpen(false);
+      setIsReservationPageOpen(false);
+      setIsBillKotPrintOpen(false);
+      setIsItemOnOffOpen(false);
+      setIsDuePaymentPageOpen(false);
+      setIsDayEndOpen(false);
+    }
   }, [initialOpenSection]);
 
   // In-memory stock toggle state for Menu Item On/Off
@@ -248,18 +284,18 @@ export const OperationsPage: React.FC<OperationsPageProps> = ({
   );
 
   if (isDayEndOpen) {
-    return <DayEndSummaryPage onBack={() => setIsDayEndOpen(false)} />;
+    return <DayEndSummaryPage onBack={handleBackToAllOperations} />;
   }
 
   if (isDuePaymentPageOpen) {
-    return <DuePaymentPage onBack={() => setIsDuePaymentPageOpen(false)} />;
+    return <DuePaymentPage onBack={handleBackToAllOperations} />;
   }
 
   if (isTableManagementOpen) {
     return (
       <TableManagementPage
         tables={tables}
-        onBack={() => setIsTableManagementOpen(false)}
+        onBack={handleBackToAllOperations}
         onNavigateToBilling={onNavigateToBilling}
         onUpdateTables={onUpdateTables}
         onPrintBill={onPrintBill}
@@ -271,7 +307,7 @@ export const OperationsPage: React.FC<OperationsPageProps> = ({
     return (
       <BillKotPrintPage
         tables={tables}
-        onBack={() => setIsBillKotPrintOpen(false)}
+        onBack={handleBackToAllOperations}
         onNavigateToBilling={onNavigateToBilling}
         onPrintBill={onPrintBill}
       />
@@ -279,13 +315,13 @@ export const OperationsPage: React.FC<OperationsPageProps> = ({
   }
 
   if (isItemOnOffOpen) {
-    return <ItemOnOffPage onBack={() => setIsItemOnOffOpen(false)} />;
+    return <ItemOnOffPage onBack={handleBackToAllOperations} />;
   }
 
   if (isMenuManagementOpen) {
     return (
       <MenuManagementPage
-        onBack={() => setIsMenuManagementOpen(false)}
+        onBack={handleBackToAllOperations}
         onNavigateToBilling={onNavigateToBilling}
       />
     );
@@ -294,7 +330,7 @@ export const OperationsPage: React.FC<OperationsPageProps> = ({
   if (isTaxesOpen) {
     return (
       <TaxesManagementPage
-        onBack={() => setIsTaxesOpen(false)}
+        onBack={handleBackToAllOperations}
         taxRules={taxRules}
         onUpdateTaxRules={onUpdateTaxRules}
       />
@@ -304,7 +340,7 @@ export const OperationsPage: React.FC<OperationsPageProps> = ({
   if (isDiscountsOpen) {
     return (
       <DiscountsManagementPage
-        onBack={() => setIsDiscountsOpen(false)}
+        onBack={handleBackToAllOperations}
         discountRules={discountRules}
         onUpdateDiscountRules={onUpdateDiscountRules}
       />
@@ -314,7 +350,7 @@ export const OperationsPage: React.FC<OperationsPageProps> = ({
   if (isReservationPageOpen) {
     return (
       <TableReservationPage
-        onBack={() => setIsReservationPageOpen(false)}
+        onBack={handleBackToAllOperations}
         tables={tables}
         reservations={reservations}
         onUpdateReservations={onUpdateReservations}
@@ -334,12 +370,22 @@ export const OperationsPage: React.FC<OperationsPageProps> = ({
         </div>
       )}
 
-      {/* Sub-bar: Operations Title (Placed on the left where the table view button was) */}
+      {/* Sub-bar: Operations Title & Back to Table View */}
       <div className="bg-[#ede8dd] border-b border-[#ded5c2] px-4 sm:px-6 py-2.5 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center">
           <h2 className="font-roman font-bold text-lg sm:text-xl text-maroon-950 tracking-normal drop-shadow-2xs">
             Operations
           </h2>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onNavigateToTables}
+            className="px-2.5 py-1 rounded-md border border-stone-300 bg-white hover:bg-stone-50 text-stone-700 text-xs font-semibold transition-all shadow-2xs cursor-pointer flex items-center gap-1 active:scale-95"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 text-stone-700" />
+            <span>Table View</span>
+          </button>
         </div>
       </div>
 

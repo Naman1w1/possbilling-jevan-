@@ -11,7 +11,8 @@ import {
   PauseCircle,
   Bell,
   LogOut,
-  X
+  X,
+  LayoutGrid
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -25,6 +26,7 @@ interface HeaderProps {
   onOpenAlerts: () => void;
   onOpenLiveView?: () => void;
   onOpenItemOnOff?: () => void;
+  onOpenOperations?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -38,6 +40,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAlerts,
   onOpenLiveView,
   onOpenItemOnOff,
+  onOpenOperations,
 }) => {
   const [itemsActive, setItemsActive] = useState<boolean>(true);
   const [mobileSearchOpen, setMobileSearchOpen] = useState<boolean>(false);
@@ -163,6 +166,16 @@ export const Header: React.FC<HeaderProps> = ({
                 <span className="absolute -top-0.5 -right-0.5 w-1 h-1 rounded-full bg-rose-500 animate-ping" />
               </div>
               <span className="text-[9px] font-medium mt-0.5">Live View</span>
+            </button>
+
+            {/* Operations */}
+            <button
+              onClick={onOpenOperations}
+              title="All Operations Page"
+              className="flex flex-col items-center justify-center p-1 rounded-lg text-stone-700 hover:text-maroon-900 hover:bg-maroon-50/70 transition-all cursor-pointer"
+            >
+              <LayoutGrid className="w-3.5 h-3.5 text-stone-600" />
+              <span className="text-[9px] font-medium mt-0.5">Operations</span>
             </button>
 
             {/* Orders */}
