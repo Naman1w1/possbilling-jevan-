@@ -493,17 +493,17 @@ export const PosBillingPage: React.FC<PosBillingPageProps> = ({
             </div>
 
             {/* Food Items Cards Grid - ONLY THIS SCROLLS */}
-            <div className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3 auto-rows-max">
+            <div className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-2.5 sm:gap-3 auto-rows-max">
               {filteredItems.map((item) => {
                 const isCustomizable = item.hasVariations || item.category.toLowerCase().includes('pizza');
                 return (
                   <div
                     key={item.id}
                     onClick={() => handleDishClick(item)}
-                    className="group relative bg-white border border-[#ded5c2] hover:border-maroon-800/80 rounded-xl p-2.5 flex items-center gap-3 shadow-2xs hover:shadow-md transition-all cursor-pointer select-none active:scale-98"
+                    className="group relative bg-white border border-[#ded5c2] hover:border-maroon-800/80 rounded-xl p-2 sm:p-2.5 flex items-center gap-2.5 shadow-2xs hover:shadow-md transition-all cursor-pointer select-none active:scale-98"
                   >
-                    {/* Food Image */}
-                    <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-lg overflow-hidden flex-shrink-0 bg-stone-100 border border-stone-200">
+                    {/* Food Image - Reduced compact shape size so text has plenty of room */}
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden flex-shrink-0 bg-stone-100 border border-stone-200">
                       {item.image ? (
                         <img
                           src={item.image}
@@ -512,57 +512,62 @@ export const PosBillingPage: React.FC<PosBillingPageProps> = ({
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-stone-400">
-                          <UtensilsCrossed className="w-6 h-6" />
+                          <UtensilsCrossed className="w-5 h-5" />
                         </div>
                       )}
                     </div>
 
-                    {/* Details - Pure English, Adjusted typography and pricing */}
-                    <div className="flex-1 min-w-0 pr-4">
-                      <h4 className="text-xs sm:text-[13px] font-semibold text-stone-800 group-hover:text-maroon-900 leading-snug line-clamp-2 transition-colors">
-                        {item.name}
-                      </h4>
+                    {/* Details - Clear spacing, no overlapping text */}
+                    <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                      {/* Top Row: Dish Name + Shortcode & Veg/Non-Veg Badges (Moved outside the price) */}
+                      <div className="flex items-start justify-between gap-1.5">
+                        <h4 className="text-xs sm:text-[13px] font-bold text-stone-800 group-hover:text-maroon-900 leading-tight line-clamp-2 transition-colors flex-1">
+                          {item.name}
+                        </h4>
+
+                        {/* Top-Right Badges: Shortcode & Veg Indicator cleanly together */}
+                        <div className="flex items-center gap-1 flex-shrink-0 ml-1">
+                          {item.shortCode && (
+                            <span className="text-[9px] font-mono font-bold text-stone-500 bg-stone-100 px-1.5 py-0.5 rounded border border-stone-200 select-none leading-none">
+                              {item.shortCode}
+                            </span>
+                          )}
+                          <div
+                            className={`w-3.5 h-3.5 border flex items-center justify-center rounded-xs flex-shrink-0 ${
+                              item.isVeg !== false
+                                ? 'border-emerald-600 bg-white'
+                                : 'border-rose-600 bg-white'
+                            }`}
+                          >
+                            <div
+                              className={`w-1.5 h-1.5 rounded-full ${
+                                item.isVeg !== false ? 'bg-emerald-600' : 'bg-rose-600'
+                              }`}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Middle: Sizes & Addons Badge */}
                       {isCustomizable && (
-                        <span className="inline-block mt-0.5 text-[9px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200">
-                          Sizes &amp; Addons
-                        </span>
+                        <div className="mt-1">
+                          <span className="inline-block text-[9px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 leading-none">
+                            Sizes &amp; Addons
+                          </span>
+                        </div>
                       )}
 
-                      {/* Adjusted Pricing Font */}
+                      {/* Bottom Row: Clean Price with Zero Overlap */}
                       <div className="mt-1.5 flex items-baseline">
-                        <span className="text-xs sm:text-sm font-bold font-mono text-stone-900 tracking-tight">
+                        <span className="text-xs sm:text-sm font-extrabold font-mono text-stone-900 tracking-tight">
                           ₹{item.price.toFixed(2)}
                         </span>
                       </div>
                     </div>
 
-                  {/* Short Code: small size in the corner of the dish border, unhighlighted */}
-                  {item.shortCode && (
-                    <span className="absolute bottom-1.5 right-2 text-[9px] font-mono text-stone-400 select-none">
-                      {item.shortCode}
-                    </span>
-                  )}
-
-                  {/* Veg / Non-Veg Indicator Badge on top right */}
-                  <div className="absolute top-2 right-2">
-                    <div
-                      className={`w-3.5 h-3.5 border flex items-center justify-center rounded-xs ${
-                        item.isVeg !== false
-                          ? 'border-emerald-600 bg-white'
-                          : 'border-rose-600 bg-white'
-                      }`}
-                    >
-                      <div
-                        className={`w-1.5 h-1.5 rounded-full ${
-                          item.isVeg !== false ? 'bg-emerald-600' : 'bg-rose-600'
-                        }`}
-                      />
-                    </div>
                   </div>
-
-                </div>
-              );
-            })}
+                );
+              })}
             </div>
 
           </div>
